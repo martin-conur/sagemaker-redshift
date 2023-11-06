@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: redshift-utils
+Version: 0.1
+Summary: custom functions for redshift within Sagemaker Studio
+Home-page: 
+Author: Martin Conur
+Author-email: martincontrerasur@gmail.com
+License: MIT
+Description-Content-Type: text/markdown

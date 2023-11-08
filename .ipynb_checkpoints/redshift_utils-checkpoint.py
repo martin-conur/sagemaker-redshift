@@ -121,7 +121,7 @@ def unload_redshift(query: str,
         header_str = "HEADER" if header else ""
     # format
     assert file_format.lower() in ("csv", "json", "parquet"), "file_format not valid."
-    format_str = file_format.upper()
+
     #delimiter
     if file_format.lower() != "parquet":
         delimiter_str = f"DELIMITER '{delimiter}'"

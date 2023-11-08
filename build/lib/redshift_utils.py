@@ -115,20 +115,26 @@ def unload_redshift(query: str,
     
     ### formatting unload options
     # header
-    header_str = "HEADER" if header else ""
+    if file_format == "parquet":
+        header_str = ""
+    else:
+        header_str = "HEADER" if header else ""
     # format
     assert file_format.lower() in ("csv", "json", "parquet"), "file_format not valid."
     format_str = file_format.upper()
     #delimiter
-    delimiter_str = f"DELIMITER '{delimiter}'"
+    if file_format.lower() != "parquet":
+        delimiter_str = f"DELIMITER '{delimiter}'"
+    else:
+        delimiter_str = ""
     # allow overwrite
     if allow_overwrite:
         allow_overwrite_str = "ALLOWOVERWRITE"
     else:
         allow_overwrite_str = ""
     # parallel
-    if parallel:
-        parallel_str = "PARALLEL TRUE"
+    if not parallel:
+        parallel_str = "PARALLEL FALSE"
     else:
         parallel_str = ""
     # partition
@@ -138,6 +144,14 @@ def unload_redshift(query: str,
         partition_by_str = ""
     # gzip
     gzip_str = "GZIP" if gzip else ""
+    
+    # extension
+    if file_format.lower() == "csv":
+        extension_str = "EXTENSION 'csv'"
+    elif file_format.lower == "json":
+        extension_str = "EXTENSION 'json'"
+    else:
+        extension_str = ""
     
     
     ## creating the query
@@ -151,16 +165,17 @@ def unload_redshift(query: str,
         {parallel_str}
         {partition_by_str}
         {gzip_str}
+        {extension_str}
     """
-    if verbose == 1:
+    if verbose >= 1:
         print(query_unload)
     # execution
     res1 = client_redshift.execute_statement(Database=db, DbUser=db_user, Sql=query_unload, ClusterIdentifier=cluster_id)
-    if verbose == 1:
+    if verbose >= 1:
         print("Redshift UNLOAD started ...")
 
     id1 = res1["Id"]
-    if verbose == 1:
+    if verbose >= 1:
         print("\nID: " + id1)
 
     # Waiter in try block and wait for DATA API to return

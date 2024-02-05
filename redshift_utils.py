@@ -158,7 +158,7 @@ def unload_redshift(query: str,
     query_unload = f"""
         unload ('{query}')
         to '{destination}' iam_role '{ds_role}' 
-        format as {format_str} 
+        format as {file_format} 
         {header_str} 
         {delimiter_str}
         {allow_overwrite_str}

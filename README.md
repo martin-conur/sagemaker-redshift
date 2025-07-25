@@ -1,12 +1,13 @@
-# redshift-utils
+# sagemaker-redshift
 
-A Python utility library for efficient data operations between Amazon Redshift and S3, including UNLOAD and COPY operations.
+A Python utility library for Redshift data operations within SageMaker, enabling seamless UNLOAD and COPY operations between Redshift and S3.
 
 ## Features
 
-- **UNLOAD data from Redshift to S3** - Export query results to various file formats
+- **UNLOAD data from Redshift to S3** - Export query results to various file formats from within SageMaker
 - **COPY data to Redshift from DataFrame** - Fast data loading using S3 as intermediary
 - **COPY data from S3 to Redshift** - Direct loading of existing S3 files
+- **SageMaker optimized** - Designed for use within SageMaker notebooks and processing jobs
 - Supports multiple file formats: CSV, JSON, Parquet
 - Built-in retry logic and error handling
 - Progress tracking with configurable verbosity
@@ -14,7 +15,7 @@ A Python utility library for efficient data operations between Amazon Redshift a
 ## Installation
 
 ```bash
-pip install redshift-utils
+pip install sagemaker-redshift
 ```
 
 ## Requirements
@@ -26,9 +27,9 @@ pip install redshift-utils
 
 ## Usage
 
-### Important: Credentials
+### Important: SageMaker Integration
 
-All functions now require explicit credential parameters for security. Previously hardcoded credentials have been removed.
+This library is designed to work seamlessly within Amazon SageMaker environments. All functions require explicit credential parameters for security. Previously hardcoded credentials have been removed.
 
 Required parameters:
 - `db`: Redshift database name
@@ -41,7 +42,7 @@ Required parameters:
 ```python
 from redshift_utils import unload_redshift
 
-# Basic usage
+# Basic usage within SageMaker
 unload_redshift(
     query="SELECT * FROM sales.transactions WHERE date >= '2024-01-01'",
     destination="s3://my-bucket/exports/sales/",
@@ -74,7 +75,7 @@ unload_redshift(
 import polars as pl
 from redshift_utils import copy_to_redshift
 
-# Create a sample DataFrame
+# Create a sample DataFrame in SageMaker
 df = pl.DataFrame({
     "product_id": [1, 2, 3, 4, 5],
     "product_name": ["Widget A", "Widget B", "Gadget C", "Gadget D", "Tool E"],
@@ -82,7 +83,7 @@ df = pl.DataFrame({
     "quantity": [100, 150, 75, 200, 50]
 })
 
-# Copy to Redshift
+# Copy to Redshift from SageMaker
 copy_to_redshift(
     df=df,
     table_name="products",
@@ -101,7 +102,7 @@ copy_to_redshift(
 ```python
 from redshift_utils import copy_s3_to_redshift
 
-# Copy existing S3 file to Redshift
+# Copy existing S3 file to Redshift from SageMaker
 copy_s3_to_redshift(
     s3_uri="s3://my-data-bucket/raw/customers_2024.parquet",
     table_name="customers",
@@ -122,7 +123,7 @@ copy_s3_to_redshift(
 - `db` (str): Redshift database name
 - `cluster_id` (str): Redshift cluster identifier
 - `db_user` (str): Database username
-- `role` (str): IAM role ARN for S3 access
+- `role` (str): IAM role ARN with appropriate permissions (can use SageMaker execution role)
 - `verbose` (int): Output verbosity (0=silent, 1=minimal, 2=detailed)
 - `max_wait_minutes` (int): Maximum time to wait for operation completion
 
@@ -156,6 +157,29 @@ copy_s3_to_redshift(
 - `file_format` (str): Source file format - "csv", "json", or "parquet"
 - `if_exists` (str): Action if table exists - "append", "truncate", or "replace"
 
+## SageMaker Integration
+
+### Using SageMaker Execution Role
+
+```python
+import sagemaker
+
+# Get the SageMaker execution role
+role = sagemaker.get_execution_role()
+
+# Use it in your operations
+unload_redshift(
+    query="SELECT * FROM my_table",
+    destination="s3://my-bucket/data/",
+    role=role,  # SageMaker execution role
+    # ... other parameters
+)
+```
+
+### Within SageMaker Processing Jobs
+
+This library works seamlessly within SageMaker Processing jobs for large-scale data operations.
+
 ## IAM Role Requirements
 
 The IAM role specified in `role` must have:
@@ -180,6 +204,13 @@ Example IAM policy:
                 "arn:aws:s3:::my-bucket/*",
                 "arn:aws:s3:::my-bucket"
             ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "redshift-data:*"
+            ],
+            "Resource": "*"
         }
     ]
 }
@@ -200,6 +231,7 @@ All functions include comprehensive error handling:
 3. **Partition large exports**: Use `partition_by` to split large datasets
 4. **Clean up temporary files**: Keep `cleanup_s3=True` for copy operations
 5. **Set reasonable timeouts**: Adjust `max_wait_minutes` based on data volume
+6. **Use SageMaker execution role**: Leverage `sagemaker.get_execution_role()` for permissions
 
 ## Testing
 

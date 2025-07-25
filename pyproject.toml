@@ -3,12 +3,12 @@ requires = ["setuptools>=45,<69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "redshift-utils"
+name = "sagemaker-redshift"
 version = "0.2.0"
 authors = [
     { name="Martin Contreras", email="martincontrerasur@gmail.com" },
 ]
-description = "A Python utility library for efficient data operations between Amazon Redshift and S3"
+description = "A Python utility library for Redshift data operations within SageMaker, enabling seamless UNLOAD and COPY operations between Redshift and S3"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -34,8 +34,8 @@ dependencies = [
 license = {text = "MIT"}
 
 [project.urls]
-Homepage = "https://github.com/martin-conur/redshift-utils"
-Repository = "https://github.com/martin-conur/redshift-utils"
+Homepage = "https://github.com/martin-conur/sagemaker-redshift"
+Repository = "https://github.com/martin-conur/sagemaker-redshift"
 
 [tool.setuptools]
 py-modules = ["redshift_utils"]

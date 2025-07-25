@@ -16,7 +16,7 @@ class TestUnloadRedshift:
                 db="",
                 cluster_id="cluster",
                 db_user="user",
-                ds_role="role"
+                role="role"
             )
     
     @patch('redshift_utils.boto3.Session')
@@ -54,7 +54,7 @@ class TestUnloadRedshift:
             db="test_db",
             cluster_id="test-cluster",
             db_user="test-user",
-            ds_role="arn:aws:iam::123456789012:role/test-role",
+            role="arn:aws:iam::123456789012:role/test-role",
             verbose=0
         )
         
@@ -96,7 +96,7 @@ class TestUnloadRedshift:
             db="db",
             cluster_id="cluster",
             db_user="user",
-            ds_role="role",
+            role="role",
             file_format="parquet",
             verbose=0
         )
@@ -116,7 +116,7 @@ class TestUnloadRedshift:
                 db="db",
                 cluster_id="cluster",
                 db_user="user",
-                ds_role="role",
+                role="role",
                 file_format="invalid_format"
             )
 
@@ -137,7 +137,7 @@ class TestCopyToRedshift:
                 db="",  # Empty db
                 cluster_id="cluster",
                 db_user="user",
-                ds_role="role"
+                role="role"
             )
     
     @patch('redshift_utils.boto3.Session')
@@ -180,7 +180,7 @@ class TestCopyToRedshift:
             db="test_db",
             cluster_id="test-cluster",
             db_user="test-user",
-            ds_role="arn:aws:iam::123456789012:role/test-role",
+            role="arn:aws:iam::123456789012:role/test-role",
             verbose=0
         )
         
@@ -235,7 +235,7 @@ class TestCopyToRedshift:
             db="db",
             cluster_id="cluster",
             db_user="user",
-            ds_role="role",
+            role="role",
             if_exists="truncate",
             verbose=0
         )
@@ -262,7 +262,7 @@ class TestCopyS3ToRedshift:
                 db=None,  # None value
                 cluster_id="cluster",
                 db_user="user",
-                ds_role="role"
+                role="role"
             )
     
     @patch('redshift_utils.boto3.Session')
@@ -290,7 +290,7 @@ class TestCopyS3ToRedshift:
             db="test_db",
             cluster_id="test-cluster",
             db_user="test-user",
-            ds_role="arn:aws:iam::123456789012:role/test-role",
+            role="arn:aws:iam::123456789012:role/test-role",
             file_format="csv",
             verbose=0
         )
@@ -327,7 +327,7 @@ class TestCopyS3ToRedshift:
             db="db",
             cluster_id="cluster",
             db_user="user",
-            ds_role="role",
+            role="role",
             file_format="parquet",
             verbose=0
         )

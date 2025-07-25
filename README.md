@@ -34,7 +34,7 @@ Required parameters:
 - `db`: Redshift database name
 - `cluster_id`: Redshift cluster identifier
 - `db_user`: Database username
-- `ds_role`: IAM role ARN with appropriate permissions
+- `role`: IAM role ARN with appropriate permissions
 
 ### 1. UNLOAD data from Redshift to S3
 
@@ -48,7 +48,7 @@ unload_redshift(
     db="prod",
     cluster_id="my-redshift-cluster",
     db_user="myuser",
-    ds_role="arn:aws:iam::123456789012:role/RedshiftS3Role",
+    role="arn:aws:iam::123456789012:role/RedshiftS3Role",
     file_format="parquet",
     partition_by="date",
     gzip=True
@@ -61,7 +61,7 @@ unload_redshift(
     db="analytics",
     cluster_id="analytics-cluster",
     db_user="analyst",
-    ds_role="arn:aws:iam::123456789012:role/RedshiftS3Role",
+    role="arn:aws:iam::123456789012:role/RedshiftS3Role",
     file_format="csv",
     delimiter="|",
     header=True
@@ -91,7 +91,7 @@ copy_to_redshift(
     db="warehouse",
     cluster_id="warehouse-cluster",
     db_user="etl_user",
-    ds_role="arn:aws:iam::123456789012:role/RedshiftS3Role",
+    role="arn:aws:iam::123456789012:role/RedshiftS3Role",
     if_exists="truncate"  # Options: "append", "truncate", "replace"
 )
 ```
@@ -109,7 +109,7 @@ copy_s3_to_redshift(
     db="analytics",
     cluster_id="analytics-cluster",
     db_user="loader",
-    ds_role="arn:aws:iam::123456789012:role/RedshiftS3Role",
+    role="arn:aws:iam::123456789012:role/RedshiftS3Role",
     file_format="parquet",
     if_exists="append"
 )
@@ -122,7 +122,7 @@ copy_s3_to_redshift(
 - `db` (str): Redshift database name
 - `cluster_id` (str): Redshift cluster identifier
 - `db_user` (str): Database username
-- `ds_role` (str): IAM role ARN for S3 access
+- `role` (str): IAM role ARN for S3 access
 - `verbose` (int): Output verbosity (0=silent, 1=minimal, 2=detailed)
 - `max_wait_minutes` (int): Maximum time to wait for operation completion
 
@@ -158,7 +158,7 @@ copy_s3_to_redshift(
 
 ## IAM Role Requirements
 
-The IAM role specified in `ds_role` must have:
+The IAM role specified in `role` must have:
 - Read/write access to the S3 buckets used
 - Permission to assume the role from Redshift
 - Appropriate Redshift permissions

@@ -16,7 +16,7 @@ def unload_redshift(query: str,
                     db: str,
                     cluster_id: str,
                     db_user: str,
-                    ds_role: str,
+                    role: str,
                     header: bool=True,
                     file_format: str='csv',
                     delimiter: str=',',
@@ -38,7 +38,7 @@ def unload_redshift(query: str,
             db: Redshift database name
             cluster_id: Redshift cluster identifier
             db_user: Database username
-            ds_role: IAM role ARN for data access
+            role: IAM role ARN for data access
             header: whether store header in the files or not
             file_format: format of the files stored in s3
             delimiter: file delimiter
@@ -105,8 +105,8 @@ def unload_redshift(query: str,
         print("Data API client successfully loaded")
 
     # Validate required parameters
-    if not all([db, cluster_id, db_user, ds_role]):
-        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
+    if not all([db, cluster_id, db_user, role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, role) are required")
 
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -155,7 +155,7 @@ def unload_redshift(query: str,
     # Create the unload query
     query_unload = f"""
         unload ('{query}')
-        to '{destination}' iam_role '{ds_role}' 
+        to '{destination}' iam_role '{role}' 
         format as {file_format} 
         {header_str} 
         {delimiter_str}
@@ -263,7 +263,7 @@ def copy_to_redshift(df: pl.DataFrame,
                     db: str,
                     cluster_id: str,
                     db_user: str,
-                    ds_role: str,
+                    role: str,
                     s3_prefix: str = "temp_loads/",
                     if_exists: str = "append",
                     verbose: int = 1,
@@ -280,7 +280,7 @@ def copy_to_redshift(df: pl.DataFrame,
         db: Redshift database name
         cluster_id: Redshift cluster identifier
         db_user: Database username
-        ds_role: IAM role ARN for data access
+        role: IAM role ARN for data access
         s3_prefix: S3 prefix for temporary files (default: "temp_loads/")
         if_exists: 'append', 'truncate', or 'replace' (default: "append")
         verbose: 0 = no output, 1 = minimal output, 2 = full output
@@ -351,8 +351,8 @@ def copy_to_redshift(df: pl.DataFrame,
         print("Data API client successfully loaded")
     
     # Validate required parameters
-    if not all([db, cluster_id, db_user, ds_role]):
-        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
+    if not all([db, cluster_id, db_user, role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, role) are required")
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -419,7 +419,7 @@ def copy_to_redshift(df: pl.DataFrame,
         copy_sql = f"""
         COPY {schema}.{table_name}
         FROM '{s3_uri}'
-        IAM_ROLE '{ds_role}'
+        IAM_ROLE '{role}'
         FORMAT AS CSV
         IGNOREHEADER 1;
         """
@@ -492,7 +492,7 @@ def copy_s3_to_redshift(s3_uri: str,
                        db: str,
                        cluster_id: str,
                        db_user: str,
-                       ds_role: str,
+                       role: str,
                        if_exists: str = "append",
                        file_format: str = "csv",
                        verbose: int = 1,
@@ -507,7 +507,7 @@ def copy_s3_to_redshift(s3_uri: str,
         db: Redshift database name
         cluster_id: Redshift cluster identifier
         db_user: Database username
-        ds_role: IAM role ARN for data access
+        role: IAM role ARN for data access
         if_exists: 'append', 'truncate', or 'replace'
         file_format: 'parquet', 'csv', or 'json'
         verbose: 0 = no output, 1 = minimal output, 2 = full output
@@ -568,8 +568,8 @@ def copy_s3_to_redshift(s3_uri: str,
         print("Data API client successfully loaded")
     
     # Validate required parameters
-    if not all([db, cluster_id, db_user, ds_role]):
-        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
+    if not all([db, cluster_id, db_user, role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, role) are required")
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -611,7 +611,7 @@ def copy_s3_to_redshift(s3_uri: str,
     copy_sql = f"""
     COPY {schema}.{table_name}
     FROM '{s3_uri}'
-    IAM_ROLE '{ds_role}'
+    IAM_ROLE '{role}'
     {format_clause};
     """
     

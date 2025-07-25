@@ -97,10 +97,10 @@ def unload_redshift(query: str,
         print("Data API client successfully loaded")
 
     # Configuration
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    ***REMOVED***
+    cluster_id = '***REMOVED***'
+    db_user = "***REMOVED***"
+    ds_role = "***REMOVED***"
 
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -337,10 +337,10 @@ def copy_to_redshift(df: pl.DataFrame,
         print("Data API client successfully loaded")
     
     # Configuration (same as unload_redshift)
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    ***REMOVED***
+    cluster_id = '***REMOVED***'
+    db_user = "***REMOVED***"
+    ds_role = "***REMOVED***"
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -548,10 +548,10 @@ def copy_s3_to_redshift(s3_uri: str,
         print("Data API client successfully loaded")
     
     # Configuration
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    ***REMOVED***
+    cluster_id = '***REMOVED***'
+    db_user = "***REMOVED***"
+    ds_role = "***REMOVED***"
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'

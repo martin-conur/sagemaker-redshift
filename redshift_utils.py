@@ -13,6 +13,10 @@ import time
 
 def unload_redshift(query: str, 
                     destination: str,
+                    db: str,
+                    cluster_id: str,
+                    db_user: str,
+                    ds_role: str,
                     header: bool=True,
                     file_format: str='csv',
                     delimiter: str=',',
@@ -31,6 +35,10 @@ def unload_redshift(query: str,
             query: redshift SQL query. Values inside single quotes ('value')
                 should be in double single quotes (''value'').
             destination: s3 uri where unload data will be stored
+            db: Redshift database name
+            cluster_id: Redshift cluster identifier
+            db_user: Database username
+            ds_role: IAM role ARN for data access
             header: whether store header in the files or not
             file_format: format of the files stored in s3
             delimiter: file delimiter
@@ -96,11 +104,9 @@ def unload_redshift(query: str,
     if verbose >= 1:
         print("Data API client successfully loaded")
 
-    # Configuration
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    # Validate required parameters
+    if not all([db, cluster_id, db_user, ds_role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
 
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -141,7 +147,7 @@ def unload_redshift(query: str,
     # Extension
     if file_format.lower() == "csv":
         extension_str = "EXTENSION 'csv'"
-    elif file_format.lower() == "json":  # Fixed comparison bug
+    elif file_format.lower() == "json":
         extension_str = "EXTENSION 'json'"
     else:
         extension_str = ""
@@ -238,7 +244,7 @@ def verify_s3_files(s3_uri: str, s3_client, verbose: int = 1):
         )
         
         if 'Contents' in response and len(response['Contents']) > 0:
-            file_count = response['Contents'].__len__()
+            file_count = len(response['Contents'])
             if verbose >= 1:
                 print(f"✅ SUCCESS: Found {file_count} file(s) in destination")
                 if verbose >= 2:
@@ -254,6 +260,10 @@ def copy_to_redshift(df: pl.DataFrame,
                     table_name: str,
                     schema: str,
                     s3_bucket: str,
+                    db: str,
+                    cluster_id: str,
+                    db_user: str,
+                    ds_role: str,
                     s3_prefix: str = "temp_loads/",
                     if_exists: str = "append",
                     verbose: int = 1,
@@ -267,6 +277,10 @@ def copy_to_redshift(df: pl.DataFrame,
         table_name: Target table name in Redshift
         schema: Target schema name in Redshift
         s3_bucket: S3 bucket for temporary csv file
+        db: Redshift database name
+        cluster_id: Redshift cluster identifier
+        db_user: Database username
+        ds_role: IAM role ARN for data access
         s3_prefix: S3 prefix for temporary files (default: "temp_loads/")
         if_exists: 'append', 'truncate', or 'replace' (default: "append")
         verbose: 0 = no output, 1 = minimal output, 2 = full output
@@ -336,11 +350,9 @@ def copy_to_redshift(df: pl.DataFrame,
     if verbose >= 1:
         print("Data API client successfully loaded")
     
-    # Configuration (same as unload_redshift)
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    # Validate required parameters
+    if not all([db, cluster_id, db_user, ds_role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'
@@ -477,6 +489,10 @@ def copy_to_redshift(df: pl.DataFrame,
 def copy_s3_to_redshift(s3_uri: str,
                        table_name: str,
                        schema: str,
+                       db: str,
+                       cluster_id: str,
+                       db_user: str,
+                       ds_role: str,
                        if_exists: str = "append",
                        file_format: str = "csv",
                        verbose: int = 1,
@@ -488,6 +504,10 @@ def copy_s3_to_redshift(s3_uri: str,
         s3_uri: Full S3 URI to the file (e.g., 's3://bucket/path/file.parquet')
         table_name: Target table name in Redshift
         schema: Target schema name in Redshift
+        db: Redshift database name
+        cluster_id: Redshift cluster identifier
+        db_user: Database username
+        ds_role: IAM role ARN for data access
         if_exists: 'append', 'truncate', or 'replace'
         file_format: 'parquet', 'csv', or 'json'
         verbose: 0 = no output, 1 = minimal output, 2 = full output
@@ -547,11 +567,9 @@ def copy_s3_to_redshift(s3_uri: str,
     if verbose >= 1:
         print("Data API client successfully loaded")
     
-    # Configuration
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    # Validate required parameters
+    if not all([db, cluster_id, db_user, ds_role]):
+        raise ValueError("All credential parameters (db, cluster_id, db_user, ds_role) are required")
     
     # Create custom waiter
     waiter_name = 'DataAPIExecution'

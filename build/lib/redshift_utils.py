@@ -101,9 +101,9 @@ def unload_redshift(query: str,
 
     print("Data API client successfully loaded")
 
-    db = "prod"
-    cluster_id = 'redshift-privado-prod'
-    db_user = "mcontrerasu"
+    ***REMOVED***
+    cluster_id = '***REMOVED***'
+    db_user = "***REMOVED***"
 
     # creating the waiter
     waiter_model = WaiterModel(waiter_config)
@@ -111,7 +111,7 @@ def unload_redshift(query: str,
     
     redshift_iam_role = sagemaker.get_execution_role() 
     source_s3_region='us-east-1'
-    ds_role = "arn:aws:iam::547580232856:role/esb-bi-data-scientists-redshift-role"
+    ds_role = "***REMOVED***"
     
     ### formatting unload options
     # header
